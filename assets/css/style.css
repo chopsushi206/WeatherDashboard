@@ -1,0 +1,21 @@
+/* ---- Style Resets ----*/
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    height: 100vh;
+    background: #f8f8f8;
+    font-family: 'Roboto Mono', monospace;
+}
+
+.title {
+    background-color:#1f314f;
+    width: 100%;
+    color: #f0f1fa;
+    padding: 10px;
+    text-align: center;
+    box-shadow: 0px 5px 10px rgb(71, 71, 71, .80);
+}
