@@ -1,17 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Work+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
     <link href="assets/css/style.css" rel="stylesheet">
     <title>Weather Dashboard</title>
 </head>
+
 <body>
-    <div class="title"><h1>Weather Dashboard</h1></div>
-    
+    <div class="title">
+        <h1>Weather Dashboard</h1>
+    </div>
+    <div class="topcontainer">
+        <nav class="sidebar">
+            <form>
+                <label for="location">Location:</label><br>
+                <input type="text" id="location" name="location" value="City, or Zip Code" size="20" maxlength="50">
+                <a href="#" class="submitBtn">Search</a>
+            </form>
+            <section>
+                <span>Search History:</span>
+                <ul>
+                    <li><a href="#">City</a></li>
+                    <li><a href="#">City</a></li>
+                    <li><a href="#">City</a></li>
+                    <li><a href="#">City</a></li>
+                    <li><a href="#">City</a></li>
+                    <li><a href="#">City</a></li>
+                    <li><a href="#">City</a></li>
+                    <li><a href="#">City</a></li>
+                </ul>
+            </section>
+        </nav>
+        <main class="currentDay">
+        </main>
+    </div>
+    <div class="bottomcontainer">
+        <div class="daycard">
+            <h3>01/02/21</h3>
+            <p>Temp: 86.34 F</p>
+            <p>Humidity: 16%</p>
+        </div>
+        <div class="daycard">
+            <h3>01/02/21</h3>
+            <p>Temp: 86.34 F</p>
+            <p>Humidity: 16%</p>
+        </div>
+        <div class="daycard">
+            <h3>01/02/21</h3>
+            <p>Temp: 86.34 F</p>
+            <p>Humidity: 16%</p>
+        </div>
+        <div class="daycard">
+            <h3>01/02/21</h3>
+            <p>Temp: 86.34 F</p>
+            <p>Humidity: 16%</p>
+        </div>
+        <div class="daycard">
+            <h3>01/02/21</h3>
+            <p>Temp: 86.34 F</p>
+            <p>Humidity: 16%</p>
+        </div>
+    </div>
     <script src="assets/js/script.js"></script>
 </body>
+
 </html>
