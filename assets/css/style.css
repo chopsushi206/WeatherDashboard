@@ -119,3 +119,7 @@ body {
 .green {
     background-color: #01a701;
 }
+
+.hide {
+    display: none;
+}

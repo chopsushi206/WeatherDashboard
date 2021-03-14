@@ -1,6 +1,7 @@
 // DOM Elements
 const currentDayEl = document.getElementById('currentDay');
 const currentDayTitleEl = document.getElementById('currentdayTitle');
+const forcastTitleEl = document.getElementById('forecasttitle');
 const bottomContainerEl = document.querySelector('.bottomcontainer');
 const searchHistoryEl = document.getElementById('searchHistory');
 const inputEl = document.getElementById('location');
@@ -15,7 +16,7 @@ let loc;
 // function to call fetch and handle promises
 function currentDayApi() {
     //  variable for api url
-    let currentDayUrl = 'https://api.openweathermap.org/data/2.5/weather?q=Seattle&units=imperial&appid=e730c08a61ff43dadfd7df6e93ba1be2'
+    let currentDayUrl = 'https://api.openweathermap.org/data/2.5/weather?q=seattle&units=imperial&appid=e730c08a61ff43dadfd7df6e93ba1be2'
 
     // fetching that url
     fetch(currentDayUrl)
@@ -25,6 +26,7 @@ function currentDayApi() {
         })
         // then using returned data
         .then(function (data) {
+            currentDayEl.innerHTML = '';
             // variable creating h2 element
             const cityName = document.createElement('h2');
             // placing data from api inside h2
@@ -170,9 +172,13 @@ function fiveDayApi() {
 
 // function to get value of input El
 function getLocation() {
-    loc = inputEl.value;
+    loc = inputEl.value.trim();
     // console log loc
     console.log(loc);
+    // removing class 
+    currentDayEl.classList.remove('hide');
+    // removinf class
+    forcastTitleEl.classList.remove('hide');
     // call api functions
     currentDayApi();
     fiveDayApi();
