@@ -1,6 +1,7 @@
 // DOM Elements
 const currentDayEl = document.getElementById('currentDay');
 const currentDayTitleEl = document.getElementById('currentdayTitle');
+const bottomContainerEl = document.querySelector('.bottomcontainer');
 const searchHistoryEl = document.getElementById('searchHistory');
 const searchBtnEl = document.getElementById('searchBtn');
 // Moment variable to display current Date.
@@ -9,7 +10,7 @@ const date = moment().format('M/DD/YYYY');
 // function to call fetch and handle promises
 function currentDayApi() {
     //  variable for api url
-    let currentDayUrl = 'https://api.openweathermap.org/data/2.5/weather?q=Seoul&units=imperial&appid=e730c08a61ff43dadfd7df6e93ba1be2'
+    let currentDayUrl = 'https://api.openweathermap.org/data/2.5/weather?q=Seattle&units=imperial&appid=e730c08a61ff43dadfd7df6e93ba1be2'
 
     // fetching that url
     fetch(currentDayUrl)
@@ -28,7 +29,7 @@ function currentDayApi() {
             // variable creating image element
             let currentIcon = document.createElement('img');
             // setting the src using data from api
-            currentIcon.setAttribute('src', 'http://openweathermap.org/img/w/' + data.weather[0].icon +'.png');
+            currentIcon.setAttribute('src', 'http://openweathermap.org/img/w/' + data.weather[0].icon + '.png');
             // adding class to image element
             currentIcon.classList.add('icon');
             // appending element to html
@@ -86,14 +87,14 @@ function currentDayApi() {
                     // if data from api is less than or equal to 2 add class green
                     if (uvNum <= 2) {
                         uviValue.classList.add('green');
-                    // else data from api less than or equal to 5 add class yellow    
+                        // else data from api less than or equal to 5 add class yellow    
                     } else if (uvNum <= 5) {
                         uviValue.classList.add('yellow');
-                    // else data from api less than or equal to 7 add class orange    
+                        // else data from api less than or equal to 7 add class orange    
                     } else if (uvNum <= 7) {
                         uviValue.classList.add('orange');
-                    // else data from api less than or equal to 10 add class red    
-                    } else if (uvNum <= 10){
+                        // else data from api less than or equal to 10 add class red    
+                    } else if (uvNum <= 10) {
                         uviValue.classList.add('red');
                     };
                     // append variable to other variable
@@ -104,6 +105,7 @@ function currentDayApi() {
         });
 };
 
+// function to call fetch and handle promises
 function fiveDayApi() {
     //  variable for api url
     let fiveDayUrl = 'https://api.openweathermap.org/data/2.5/forecast?q=Phoenix&units=imperial&appid=e730c08a61ff43dadfd7df6e93ba1be2'
@@ -116,8 +118,40 @@ function fiveDayApi() {
         })
         // then using returned data
         .then(function (data) {
-            // console.log test of data to see the array of objects
-            console.log(data)
+            // variable to filter data
+            let uniqueDays = data.list.filter(function (element, i) {
+                // and return if including text '18:00:00'
+                if (element.dt_txt.indexOf('18:00:00') !== -1) {
+                    return element
+                }
+            })
+            //clearing HTML element
+            bottomContainerEl.innerHTML = '';
+            // loop for each element in variable
+            uniqueDays.forEach(function (element, i) {
+                // variable creating div element
+                const dayCard = document.createElement('div');
+                // adding class to that element
+                dayCard.classList.add('daycard');
+                // variable creating h3 element
+                const h3 = document.createElement('h3');
+                // adding content to h3 element from element and formatting with moment
+                h3.textContent = moment(element.dt_txt).format('M/DD/YY');
+                // variable to create p element
+                const temp = document.createElement('p');
+                // adding content to p element from element 
+                temp.textContent = 'Temp: ' + element.main.temp_max + '°F';
+                // variable to create p element
+                const hum = document.createElement('p');
+                // adding content to p element from element
+                hum.textContent = 'Humidity: ' + element.main.humidity + '%';
+                // appending h3 to daycard
+                dayCard.appendChild(h3);
+                // appending temp and hum to daycard
+                dayCard.appendChild(temp).appendChild(hum);
+                // appending daycard to html
+                bottomContainerEl.appendChild(dayCard);
+            })
         });
 };
 
