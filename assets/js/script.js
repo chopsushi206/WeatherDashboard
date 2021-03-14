@@ -3,9 +3,14 @@ const currentDayEl = document.getElementById('currentDay');
 const currentDayTitleEl = document.getElementById('currentdayTitle');
 const bottomContainerEl = document.querySelector('.bottomcontainer');
 const searchHistoryEl = document.getElementById('searchHistory');
-const searchBtnEl = document.getElementById('searchBtn');
+const inputEl = document.getElementById('location');
+const searchBtnEl = document.getElementById('submitBtn');
 // Moment variable to display current Date.
 const date = moment().format('M/DD/YYYY');
+// array to keep history of searches
+const locationArray = [];
+// variable to get location 
+let loc;
 
 // function to call fetch and handle promises
 function currentDayApi() {
@@ -21,13 +26,13 @@ function currentDayApi() {
         // then using returned data
         .then(function (data) {
             // variable creating h2 element
-            let cityName = document.createElement('h2');
+            const cityName = document.createElement('h2');
             // placing data from api inside h2
             cityName.textContent = data.name + ' (' + date + ') ';
             // appending h2 in html
             currentDayTitleEl.appendChild(cityName);
             // variable creating image element
-            let currentIcon = document.createElement('img');
+            const currentIcon = document.createElement('img');
             // setting the src using data from api
             currentIcon.setAttribute('src', 'http://openweathermap.org/img/w/' + data.weather[0].icon + '.png');
             // adding class to image element
@@ -35,35 +40,35 @@ function currentDayApi() {
             // appending element to html
             currentDayTitleEl.appendChild(currentIcon);
             // variable creating span element
-            let currentTemp = document.createElement('span');
+            const currentTemp = document.createElement('span');
             // placing data from api within span text
             currentTemp.textContent = 'Temperature: ' + data.main.temp + '°F';
             // appending span element to html
             currentDayEl.appendChild(currentTemp);
             // variable creating span element
-            let currentHumidity = document.createElement('span');
+            const currentHumidity = document.createElement('span');
             // placing data from api within span text
             currentHumidity.textContent = 'Humidity: ' + data.main.humidity + '%';
             // appending span element to html
             currentDayEl.appendChild(currentHumidity);
             // variable creating span element
-            let currentWind = document.createElement('span');
+            const currentWind = document.createElement('span');
             // placing data from api within span text
             currentWind.textContent = 'Wind Speed: ' + data.wind.speed + ' MPH';
             // appending span element to html
             currentDayEl.appendChild(currentWind);
             // variable creating li element
-            let searchCity = document.createElement('li');
+            const searchCity = document.createElement('li');
             // placing data from api within li element
             searchCity.textContent = data.name;
             // appeding li element within html
             searchHistoryEl.appendChild(searchCity);
             // creating variable for latitude value from api data
-            let lat = data.coord.lat;
+            const lat = data.coord.lat;
             // creating variable for longitude value from api data
-            let long = data.coord.lon;
+            const long = data.coord.lon;
             // creating variable for url of API with uv Index
-            let uvApiUrl = 'https://api.openweathermap.org/data/2.5/onecall?lat=' + lat + '&lon=' + long + '&exclude=hourly,daily&appid=e730c08a61ff43dadfd7df6e93ba1be2'
+            const uvApiUrl = 'https://api.openweathermap.org/data/2.5/onecall?lat=' + lat + '&lon=' + long + '&exclude=hourly,daily&appid=e730c08a61ff43dadfd7df6e93ba1be2'
             // fetching that url
             fetch(uvApiUrl)
                 // returning in json format
@@ -73,13 +78,13 @@ function currentDayApi() {
                 // then using returned data
                 .then(function (uvdata) {
                     // create variable to equal data from fetch
-                    let uvNum = uvdata.current.uvi;
+                    const uvNum = uvdata.current.uvi;
                     // variable to create span element
-                    let uviText = document.createElement('span');
+                    const uviText = document.createElement('span');
                     // inserting text into span element
                     uviText.textContent = 'UV Index: ';
                     // variable to create a span element
-                    let uviValue = document.createElement('span');
+                    const uviValue = document.createElement('span');
                     // adding class to span element
                     uviValue.classList.add('uv');
                     // adding text content from api data to element
@@ -119,7 +124,7 @@ function fiveDayApi() {
         // then using returned data
         .then(function (data) {
             // variable to filter data
-            let uniqueDays = data.list.filter(function (element, i) {
+            const uniqueDays = data.list.filter(function (element, i) {
                 // and return if including text '18:00:00'
                 if (element.dt_txt.indexOf('18:00:00') !== -1) {
                     return element
@@ -137,6 +142,12 @@ function fiveDayApi() {
                 const h3 = document.createElement('h3');
                 // adding content to h3 element from element and formatting with moment
                 h3.textContent = moment(element.dt_txt).format('M/DD/YY');
+                // variable to create img element
+                const weekdayIcon = document.createElement('img');
+                // setting src of img element 
+                weekdayIcon.setAttribute('src', 'http://openweathermap.org/img/w/' + element.weather[0].icon + '.png');
+                // adding class to img element
+                weekdayIcon.classList.add('icon');
                 // variable to create p element
                 const temp = document.createElement('p');
                 // adding content to p element from element 
@@ -147,6 +158,8 @@ function fiveDayApi() {
                 hum.textContent = 'Humidity: ' + element.main.humidity + '%';
                 // appending h3 to daycard
                 dayCard.appendChild(h3);
+                // appending weekdayIcon to daycard
+                dayCard.appendChild(weekdayIcon);
                 // appending temp and hum to daycard
                 dayCard.appendChild(temp).appendChild(hum);
                 // appending daycard to html
@@ -155,6 +168,15 @@ function fiveDayApi() {
         });
 };
 
-// calling functions
-currentDayApi();
-fiveDayApi();
+// function to get value of input El
+function getLocation() {
+    loc = inputEl.value;
+    // console log loc
+    console.log(loc);
+    // call api functions
+    currentDayApi();
+    fiveDayApi();
+}
+
+// event listener for search button calls get location function
+searchBtnEl.addEventListener('click', getLocation);
