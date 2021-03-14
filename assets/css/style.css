@@ -59,18 +59,26 @@ body {
 .bottomcontainer {
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
     flex-direction: row;
-    margin: 30px 50px 0px 10px;
+    margin: 0px 50px 0px 10px;
+}
+
+.forecasttitle {
+    margin: 30px 50px 10px 10px;
+    width: 100%;
 }
 
 .daycard {
     background-color: #008bdb;
     color: #ffffff;
     width: 15%;
-    padding: 0px 10px 0px 10px;
+    min-width: 100px;
+    padding: 0px 10px 10px 10px;
     border-radius:5px;
     box-shadow: 0px 2px 5px rgb(71, 71, 71, .60);
     line-height: 40px;
+    margin-bottom: 10px;
 }
 
 .submitBtn {
@@ -84,4 +92,22 @@ body {
 .icon {
     width: 50px;
     height: 50px;
+}
+
+.uv {
+    padding: 5px;
+    border-radius: 3px;
+    color: #ffffff;
+}
+
+.red {
+    background-color: #cc1313;
+}
+
+.yellow {
+ background-color: #ebd408;
+}
+
+.green {
+    background-color: #01a701;
 }

@@ -5,11 +5,12 @@ const searchHistoryEl = document.getElementById('searchHistory');
 const searchBtnEl = document.getElementById('searchBtn');
 // Moment variable to display current Date.
 const date = moment().format('M/DD/YYYY');
+let lat, long;
 
 // function to call fetch and handle promises
 function currentDayApi() {
     //  variable for api url
-    let currentDayUrl = 'https://api.openweathermap.org/data/2.5/weather?q=Phoenix&units=imperial&appid=e730c08a61ff43dadfd7df6e93ba1be2'
+    let currentDayUrl = 'https://api.openweathermap.org/data/2.5/weather?q=Seoul&units=imperial&appid=e730c08a61ff43dadfd7df6e93ba1be2'
 
     // fetching that url
     fetch(currentDayUrl)
@@ -19,18 +20,13 @@ function currentDayApi() {
         })
         // then using returned data
         .then(function (data) {
-            // console.log test of data to see the array of objects
-            console.log(data)
-            // variable to create h2 element
-            // elements content from data as well as moment variable created earlier to display date
-            //  appending that element to another element
-            // repeats for each piece of information needed
+            console.log(data);
             let cityName = document.createElement('h2');
+            cityName.textContent = data.name + ' (' + date + ') ';
+            currentDayTitleEl.appendChild(cityName);
             let currentIcon = document.createElement('img');
             currentIcon.setAttribute('src', 'http://openweathermap.org/img/w/' + data.weather[0].icon +'.png');
             currentIcon.classList.add('icon');
-            cityName.textContent = data.name + ' (' + date + ') ';
-            currentDayTitleEl.appendChild(cityName);
             currentDayTitleEl.appendChild(currentIcon);
             let currentTemp = document.createElement('span');
             currentTemp.textContent = 'Temperature: ' + data.main.temp + '°F';
@@ -44,8 +40,12 @@ function currentDayApi() {
             let searchCity = document.createElement('li');
             searchCity.textContent = data.name;
             searchHistoryEl.appendChild(searchCity);
+            lat = data.coord.lat;
+            long = data.coord.lon;
         })
 }
+
+console.log(lat);
 
 
 currentDayApi();
