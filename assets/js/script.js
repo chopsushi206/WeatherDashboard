@@ -172,21 +172,20 @@ function fiveDayApi(city) {
 function renderLocationHistory() {
     // get item from local storage
     let searchHistory = JSON.parse(localStorage.getItem('locationArray'));
-     console.log(searchHistory);
-     console.log(typeof searchHistory);
      // setting container element as empty
      searchHistoryEl.innerHTML = '';
      //looping through 5 of the items
-     for (var i = 0; i < 5; i++) {
+     for (var i = searchHistory.length - 1; i >= 0; i--) {
          console.log(searchHistory[i]);
+         const loc = searchHistory[i];
          // variable to create li element
          const listItem = document.createElement('li');
          const listBtn = document.createElement('button')
          // setting contents of li element
-         listBtn.textContent = searchHistory[i];
+         listBtn.textContent = loc;
          //adding class to element
          listBtn.classList.add('btn');
-         // listBtn.addEventListener('click', '#');
+         listBtn.addEventListener('click', getLocation(loc));
          listItem.appendChild(listBtn);
          // appending element to html
          searchHistoryEl.appendChild(listItem);
