@@ -9,24 +9,28 @@ const searchBtnEl = document.getElementById('submitBtn');
 // Moment variable to display current Date.
 const date = moment().format('M/DD/YYYY');
 // array to keep history of searches
-const locationArray = [];
-// variable to get location 
-let loc;
+const locationArray = JSON.parse(localStorage.getItem('locationArray')) || [];
 
 // function to call fetch and handle promises
-function currentDayApi() {
+function currentDayApi(city) {
     //  variable for api url
-    let currentDayUrl = 'https://api.openweathermap.org/data/2.5/weather?q=seattle&units=imperial&appid=e730c08a61ff43dadfd7df6e93ba1be2'
+    let currentDayUrl = 'https://api.openweathermap.org/data/2.5/weather?q=' + city + '&units=imperial&appid=e730c08a61ff43dadfd7df6e93ba1be2'
 
     // fetching that url
     fetch(currentDayUrl)
         // then returning in json format
         .then(function (response) {
             return response.json();
+           
         })
         // then using returned data
         .then(function (data) {
+            // clearing element contents
             currentDayEl.innerHTML = '';
+            // clearing element contents
+            currentDayTitleEl.innerHTML = '';
+            // appending one element wihin another
+            currentDayEl.appendChild(currentDayTitleEl);
             // variable creating h2 element
             const cityName = document.createElement('h2');
             // placing data from api inside h2
@@ -36,7 +40,7 @@ function currentDayApi() {
             // variable creating image element
             const currentIcon = document.createElement('img');
             // setting the src using data from api
-            currentIcon.setAttribute('src', 'http://openweathermap.org/img/w/' + data.weather[0].icon + '.png');
+            currentIcon.setAttribute('src', 'https://openweathermap.org/img/w/' + data.weather[0].icon + '.png');
             // adding class to image element
             currentIcon.classList.add('icon');
             // appending element to html
@@ -60,12 +64,6 @@ function currentDayApi() {
             // appending span element to html
             currentDayEl.appendChild(currentWind);
             // variable creating li element
-            const searchCity = document.createElement('li');
-            // placing data from api within li element
-            searchCity.textContent = data.name;
-            // appeding li element within html
-            searchHistoryEl.appendChild(searchCity);
-            // creating variable for latitude value from api data
             const lat = data.coord.lat;
             // creating variable for longitude value from api data
             const long = data.coord.lon;
@@ -113,9 +111,9 @@ function currentDayApi() {
 };
 
 // function to call fetch and handle promises
-function fiveDayApi() {
+function fiveDayApi(city) {
     //  variable for api url
-    let fiveDayUrl = 'https://api.openweathermap.org/data/2.5/forecast?q=Phoenix&units=imperial&appid=e730c08a61ff43dadfd7df6e93ba1be2'
+    let fiveDayUrl = 'https://api.openweathermap.org/data/2.5/forecast?q=' + city + '&units=imperial&appid=e730c08a61ff43dadfd7df6e93ba1be2'
 
     // fetching that url
     fetch(fiveDayUrl)
@@ -147,7 +145,7 @@ function fiveDayApi() {
                 // variable to create img element
                 const weekdayIcon = document.createElement('img');
                 // setting src of img element 
-                weekdayIcon.setAttribute('src', 'http://openweathermap.org/img/w/' + element.weather[0].icon + '.png');
+                weekdayIcon.setAttribute('src', 'https://openweathermap.org/img/w/' + element.weather[0].icon + '.png');
                 // adding class to img element
                 weekdayIcon.classList.add('icon');
                 // variable to create p element
@@ -170,19 +168,48 @@ function fiveDayApi() {
         });
 };
 
+// function to creat buttons based on users previous search
+function renderLocationHistory() {
+    // get item from local storage
+    let searchHistory = JSON.parse(localStorage.getItem('locationArray'));
+     console.log(searchHistory);
+     console.log(typeof searchHistory);
+     // setting container elelement as empty
+     searchHistoryEl.innerHTML = '';
+     //looping through 5 of the items
+     for (var i = 0; i < 5; i++) {
+         console.log(searchHistory[i]);
+         // variable to create li element
+         const listItem = document.createElement('li');
+         const listBtn = document.createElement('button')
+         // setting contents of li element
+         listBtn.textContent = searchHistory[i];
+         //adding class to element
+         listBtn.classList.add('btn');
+         listBtn.addEventListener('click', currentDayApi(searchHistory[i]), fiveDayApi(searchHistory[i]));
+         listItem.appendChild(listBtn);
+         // appending element to html
+         searchHistoryEl.appendChild(listItem);
+     };
+ };
+
 // function to get value of input El
 function getLocation() {
-    loc = inputEl.value.trim();
-    // console log loc
-    console.log(loc);
+    // variable getting value if text input and trimming
+    const location = inputEl.value.trim();
+    // putting that input into an array
+    locationArray.push(location);
+    // setting the array into local storage
+    localStorage.setItem('locationArray', JSON.stringify(locationArray));
     // removing class 
     currentDayEl.classList.remove('hide');
-    // removinf class
+    // removing class
     forcastTitleEl.classList.remove('hide');
     // call api functions
-    currentDayApi();
-    fiveDayApi();
-}
+    currentDayApi(location);
+    fiveDayApi(location);
+    renderLocationHistory();
+};
 
 // event listener for search button calls get location function
 searchBtnEl.addEventListener('click', getLocation);
