@@ -174,7 +174,7 @@ function renderLocationHistory() {
     let searchHistory = JSON.parse(localStorage.getItem('locationArray'));
      console.log(searchHistory);
      console.log(typeof searchHistory);
-     // setting container elelement as empty
+     // setting container element as empty
      searchHistoryEl.innerHTML = '';
      //looping through 5 of the items
      for (var i = 0; i < 5; i++) {
@@ -186,7 +186,7 @@ function renderLocationHistory() {
          listBtn.textContent = searchHistory[i];
          //adding class to element
          listBtn.classList.add('btn');
-         listBtn.addEventListener('click', currentDayApi(searchHistory[i]), fiveDayApi(searchHistory[i]));
+         // listBtn.addEventListener('click', '#');
          listItem.appendChild(listBtn);
          // appending element to html
          searchHistoryEl.appendChild(listItem);
