@@ -6,6 +6,8 @@ const bottomContainerEl = document.querySelector('.bottomcontainer');
 const searchHistoryEl = document.getElementById('searchHistory');
 const inputEl = document.getElementById('location');
 const searchBtnEl = document.getElementById('submitBtn');
+// variable for API key
+const apiKey = '99a34135f6340be84cd080570499c629';
 // Moment variable to display current Date.
 const date = moment().format('M/DD/YYYY');
 // array to keep history of searches
@@ -14,8 +16,7 @@ const locationArray = JSON.parse(localStorage.getItem('locationArray')) || [];
 // function to call fetch and handle promises
 function currentDayApi(city) {
     //  variable for api url
-    let currentDayUrl = 'https://api.openweathermap.org/data/2.5/weather?q=' + city + '&units=imperial&appid=e730c08a61ff43dadfd7df6e93ba1be2'
-
+    let currentDayUrl = 'https://api.openweathermap.org/data/2.5/weather?q=' + city + '&units=imperial&appid=' + apiKey;
     // fetching that url
     fetch(currentDayUrl)
         // then returning in json format
@@ -25,6 +26,7 @@ function currentDayApi(city) {
         })
         // then using returned data
         .then(function (data) {
+            console.log(data);
             // clearing element contents
             currentDayEl.innerHTML = '';
             // clearing element contents
@@ -68,7 +70,7 @@ function currentDayApi(city) {
             // creating variable for longitude value from api data
             const long = data.coord.lon;
             // creating variable for url of API with uv Index
-            const uvApiUrl = 'https://api.openweathermap.org/data/2.5/onecall?lat=' + lat + '&lon=' + long + '&exclude=hourly,daily&appid=e730c08a61ff43dadfd7df6e93ba1be2'
+            const uvApiUrl = 'https://api.openweathermap.org/data/2.5/onecall?lat=' + lat + '&lon=' + long + '&exclude=hourly,daily&appid=' + apiKey;
             // fetching that url
             fetch(uvApiUrl)
                 // returning in json format
@@ -113,7 +115,7 @@ function currentDayApi(city) {
 // function to call fetch and handle promises
 function fiveDayApi(city) {
     //  variable for api url
-    let fiveDayUrl = 'https://api.openweathermap.org/data/2.5/forecast?q=' + city + '&units=imperial&appid=e730c08a61ff43dadfd7df6e93ba1be2'
+    let fiveDayUrl = 'https://api.openweathermap.org/data/2.5/forecast?q=' + city + '&units=imperial&appid=' + apiKey;
 
     // fetching that url
     fetch(fiveDayUrl)
@@ -123,6 +125,7 @@ function fiveDayApi(city) {
         })
         // then using returned data
         .then(function (data) {
+            console.log(data);
             // variable to filter data
             const uniqueDays = data.list.filter(function (element, i) {
                 // and return if including text '18:00:00'
@@ -170,22 +173,25 @@ function fiveDayApi(city) {
 
 // function to creat buttons based on users previous search
 function renderLocationHistory() {
-    // get item from local storage
-    let searchHistory = JSON.parse(localStorage.getItem('locationArray'));
+console.log(locationArray);
      // setting container element as empty
      searchHistoryEl.innerHTML = '';
-     //looping through 5 of the items
-     for (var i = searchHistory.length - 1; i >= 0; i--) {
-         console.log(searchHistory[i]);
-         const loc = searchHistory[i];
+     //looping through 5 of the items by last item added
+     for (var i = locationArray.length - 1; i >= 0; i--) {
+         console.log(locationArray[i]);
+         const loc = locationArray[i];
          // variable to create li element
          const listItem = document.createElement('li');
+         // variable to create button element
          const listBtn = document.createElement('button')
          // setting contents of li element
          listBtn.textContent = loc;
          //adding class to element
          listBtn.classList.add('btn');
-         listBtn.addEventListener('click', getLocation(loc));
+         listBtn.addEventListener('click', function getApis() {
+            currentDayApi(loc);
+            fiveDayApi(loc);
+         });
          listItem.appendChild(listBtn);
          // appending element to html
          searchHistoryEl.appendChild(listItem);
